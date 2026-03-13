@@ -1,0 +1,33 @@
+# Playwright 自动生成的产物
+allure-results/
+auth
+playwright-report/
+blob-report/
+
+# 环境与私密信息
+.env
+.env.local
+.env.*
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# python虚拟环境，体积大，不应提交
+venv/
+
+# python字节码缓存，自动生成
+__pycache__/
+
+# 编译后的python文件
+*.pyc
+
+# pytest运行缓存
+.pytest_cache/
+
+# trace 内容，log
+evidence/
+log/
+
+# IDE 配置文件，不应提交到公共仓库
+.trae/

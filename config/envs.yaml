@@ -1,0 +1,25 @@
+dev:
+  base_url: "http://127.0.0.1:8000/"
+  username: "Caramel"
+  password: "test1"
+  db:
+    host: "127.0.0.1"
+    port: 1521
+    username: "Caramel"
+    password: "test1"
+
+staging:
+  base_url: "http://127.0.0.1:8000/"
+  db:
+    host: "staging-db"
+    port: 1521
+    username: "Caramel"
+    password: "test1"
+
+prod:
+  base_url: "http://127.0.0.1:8000/"
+  db:
+    host: "prod-db"
+    port: 1521
+    username: "Caramel"
+    password: "test1"
