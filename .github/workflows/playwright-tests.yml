@@ -7,6 +7,15 @@ on:
     branches: [main, master]
   workflow_dispatch:  # 允许手动触发
 
+# on:
+#   push:
+#     branches: [main, master]
+#   pull_request:
+#     branches: [main, master]
+#   schedule:
+#     - cron: "0 9 * * 6"  # 每周六早上 9 点（UTC 时间）
+
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -89,3 +98,23 @@ jobs:
           name: test-evidence
           path: evidence/
           retention-days: 3
+      
+      # 9. 失败后发送邮件
+      - name: 发邮件通知
+        uses: dawidd6/action-send-mail@v3
+        if: failure()   # if: failure() 表示只有测试失败才发邮件。
+        with:
+          server_address: smtp.qq.com
+          server_port: 465
+          username: ${{ secrets.CARAMEL_EMAIL }}
+          password: ${{ secrets.EMAIL_PWD }}
+          to: ${{ secrets.CARAMEL_EMAIL }}
+          from: ${{ secrets.CARAMEL_EMAIL }}
+          subject: "测试失败通知：${{ github.repository }}"
+          body: |
+            本次测试失败了！
+            
+            仓库：${{ github.repository }}
+            分支：${{ github.ref_name }}
+            触发人：${{ github.actor }}
+            查看详情：${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
