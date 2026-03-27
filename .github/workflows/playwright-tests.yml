@@ -51,6 +51,9 @@ jobs:
       - name: 安装 Django 依赖
         run: pip install -r daily-fresh-demo/requirements.txt
 
+      - name: 查看克隆结果
+        run: ls
+        
       - name: 启动 Django 应用
         run: |
           cd daily-fresh-demo && python manage.py runserver & 
