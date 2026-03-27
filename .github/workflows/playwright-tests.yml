@@ -1,0 +1,88 @@
+name: Playwright Tests
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      # 1. 拉取代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. 设置 Python 版本
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"  # 缓存 pip 依赖，加速后续运行
+
+      # 3. 安装 Python 依赖
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # 4. 安装 Playwright 浏览器（只装 Chromium，节省时间）
+      - name: Install Playwright browsers
+        run: playwright install chromium --with-deps
+
+      # 5. 启动被测应用（⚠️ 关键步骤：你需要根据实际情况修改这里）
+      #    选项 A：如果被测应用代码也在这个仓库里
+      # - name: Start app
+      #   run: |
+      #     cd path/to/your/app
+      #     python manage.py runserver &  # Django 示例
+      #     sleep 3  # 等待应用启动
+      #
+      #    选项 B：如果被测应用是独立服务，在 CI 中用 Docker 启动
+      # - name: Start app via Docker
+      #   run: docker run -d -p 8000:8000 your-app-image:latest
+      #
+      #    选项 C（当前）：跳过，适用于应用已部署在固定地址的情况
+      - name: 克隆 Django 仓库
+        run: git clone https://${{ secrets.DJANGO_REPO_TOKEN }}@github.com/ChiliCaramel/daily-fresh-demo.git
+
+      - name: 安装 Django 依赖
+        run: pip install -r daily-fresh-demo/requirements.txt
+
+      - name: 启动 Django 应用
+        run: |
+          cd daily-fresh-demo && python manage.py runserver & 
+          sleep 3
+
+
+      # 6. 运行测试（CI 中强制 headless，覆盖 pytest.ini 的 --headed）
+      - name: Run Playwright tests
+        env:
+          ENV: dev
+          # 从 GitHub Secrets 读取敏感配置（见下方说明）
+          # APP_USERNAME: ${{ secrets.APP_USERNAME }}
+          # APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
+        run: |
+          pytest --headless --slowmo 0 -v \
+            --alluredir=./allure-results \
+            --clean-alluredir
+
+      # 7. 上传 Allure 原始结果（无论成功失败都上传）
+      - name: Upload Allure results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-results
+          path: allure-results/
+          retention-days: 7
+
+      # 8. 上传失败截图和 trace（失败时才上传）
+      - name: Upload evidence on failure
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: test-evidence
+          path: evidence/
+          retention-days: 3
