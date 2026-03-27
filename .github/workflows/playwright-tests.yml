@@ -30,7 +30,7 @@ jobs:
 
       # 4. 安装 Playwright 浏览器（只装 Chromium，节省时间）
       - name: Install Playwright browsers
-        run: playwright install chromium --with-deps
+        run: python -m playwright install chromium --with-deps
 
       # 5. 启动被测应用（⚠️ 关键步骤：你需要根据实际情况修改这里）
       #    选项 A：如果被测应用代码也在这个仓库里
