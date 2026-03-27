@@ -51,6 +51,9 @@ jobs:
       - name: 查看克隆结果
         run: ls
 
+      - name: 安装系统依赖
+        run: sudo apt-get install -y libjpeg-dev zlib1g-dev
+        
       - name: 安装 Django 依赖
         run: pip install -r daily-fresh-demo/daily_fresh_demo-master/requirements.txt
 
