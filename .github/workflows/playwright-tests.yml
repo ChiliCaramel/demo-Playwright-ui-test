@@ -48,12 +48,12 @@ jobs:
       - name: 克隆 Django 仓库
         run: git clone https://${{ secrets.DJANGO_REPO_TOKEN }}@github.com/ChiliCaramel/daily-fresh-demo.git
 
+      - name: 查看克隆结果
+        run: ls
+
       - name: 安装 Django 依赖
         run: pip install -r daily-fresh-demo/requirements.txt
 
-      - name: 查看克隆结果
-        run: ls
-        
       - name: 启动 Django 应用
         run: |
           cd daily-fresh-demo && python manage.py runserver & 
