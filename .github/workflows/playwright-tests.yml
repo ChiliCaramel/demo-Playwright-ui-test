@@ -52,11 +52,11 @@ jobs:
         run: ls
 
       - name: 安装 Django 依赖
-        run: pip install -r daily-fresh-demo/requirements.txt
+        run: pip install -r daily-fresh-demo/daily_fresh_demo-master/requirements.txt
 
       - name: 启动 Django 应用
         run: |
-          cd daily-fresh-demo && python manage.py runserver & 
+          cd daily-fresh-demo/daily_fresh_demo-master && python manage.py runserver & 
           sleep 3
 
 
