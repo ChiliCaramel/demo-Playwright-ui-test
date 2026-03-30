@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+  # -------------------------------------------------------
+  # 被测应用服务（⚠️ 需要你根据实际情况修改）
+  # -------------------------------------------------------
+  app:
+    # 选项 A：如果你有被测应用的 Docker 镜像
+    # image: your-ecommerce-app:latest
+
+    # 选项 B：如果被测应用代码也在本地，可以 build
+    # build:
+    #   context: ../path-to-app
+    #   dockerfile: Dockerfile
+
+    # 临时占位：用 nginx 模拟一个在 8000 端口运行的服务
+    image: nginx:alpine
+    ports:
+      - "8000:80"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # -------------------------------------------------------
+  # Playwright 测试服务
+  # -------------------------------------------------------
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # 等待 app 健康检查通过后再启动测试
+    depends_on:
+      app:
+        condition: service_healthy
+    environment:
+      ENV: dev
+      # 覆盖 envs.yaml 中的 base_url，指向 Docker 内部服务名 "app"
+      BASE_URL: http://app:80
+    volumes:
+      # 将测试结果挂载到宿主机，方便查看
+      - ./allure-results:/app/allure-results
+      - ./evidence:/app/evidence
+      - ./log:/app/log
+    command: ["pytest", "--headless", "--slowmo", "0", "-v",
+              "--alluredir=./allure-results", "--clean-alluredir"]

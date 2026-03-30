@@ -1,6 +1,7 @@
 # Playwright 自动生成的产物
 allure-results/
-auth
+auth/
+!auth/.auth.json.example
 playwright-report/
 blob-report/
 
@@ -31,3 +32,10 @@ log/
 
 # IDE 配置文件，不应提交到公共仓库
 .trae/
+
+# MCP 配置（含本机绝对路径，机器相关）
+.mcp.json
+.playwright-mcp/
+
+# 个人笔记
+Note.md

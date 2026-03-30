@@ -12,7 +12,7 @@ from utils.logger_handler import logger
 AUTH_STATE_PATH = os.getenv("AUTH_STATE_PATH", "auth/.auth.json")
 
 # 把登录逻辑提取成conftest的私有方法
-def _do_login(page):
+def do_login(page):
     login_page = LoginPage(page)
     login_page.goto(SETTINGS["base_url"])
     login_page.navToLogin()
@@ -32,7 +32,7 @@ def setup_auth(playwright):
     context = browser.new_context()
     page = context.new_page()
 
-    _do_login(page)
+    do_login(page)
     
     # 调用context保存函数
     context.storage_state(path=AUTH_STATE_PATH)
@@ -48,7 +48,7 @@ def ensure_logged_in(page:Page,setup_auth):
     page.goto(SETTINGS["base_url"])
     if "login" in page.url:
         # 重新登录
-        _do_login(page)
+        do_login(page)
         # 更新auth.json
         page.context.storage_state(path=AUTH_STATE_PATH)
     yield # ← pytest 在这里暂停，先去跑测试 不加的话 homepage也有一个goto 会多开一个tab

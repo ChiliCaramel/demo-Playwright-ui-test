@@ -17,7 +17,7 @@ def test_add_product_to_cart(home_page:HomePage,page: Page):
         product_detail_page.add_To_Cart()
 
     with allure.step("Navigate to cart page"):
-        #product_detail_page.nav_To_Cart()
+        product_detail_page.nav_To_Cart()
         cart_page.verifyCartPageLoad()
     
         cart_page.verify_Product_In_Cart()
