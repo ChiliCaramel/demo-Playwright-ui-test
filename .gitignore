@@ -39,3 +39,7 @@ log/
 
 # 个人笔记
 Note.md
+
+# Docker Related
+Dockerfile
+docker-compose.yml

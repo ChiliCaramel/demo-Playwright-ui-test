@@ -17,12 +17,14 @@
 - 多环境配置（dev/staging/prod）
 
 ## Project Structure
+```
 ecommerce-playwright/
 ├── pages/          # Page Object Model 层
 ├── tests/          # 测试用例
 ├── config/         # 多环境配置
 ├── utils/          # 工具类（logger等）
 └── evidence/       # 失败用例证据（截图/trace/视频）
+```
 
 ## Quick Start
 ### Prerequisites
